@@ -5,10 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="51c13306-9ea1-42a8-a814-c97f5dfde974" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/entity/PasswordResetToken.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/model/PasswordModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/repository/PasswordResetTokenRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/controller/RegistrationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/controller/RegistrationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/event/listener/RegistrationCompleteEventListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/event/listener/RegistrationCompleteEventListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/repository/VerificationTokenRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/repository/VerificationTokenRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/entity/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/entity/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/repository/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/repository/UserRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/service/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/service/UserService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/service/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-security-client/src/main/java/com/sayed/rahman/springsecurityclient/service/UserServiceImpl.java" afterDir="false" />
     </list>
@@ -20,8 +23,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -91,7 +94,7 @@
       <workItem from="1661421158385" duration="6521000" />
       <workItem from="1661434950330" duration="6126000" />
       <workItem from="1661453335272" duration="2183000" />
-      <workItem from="1661509883816" duration="4222000" />
+      <workItem from="1661509883816" duration="9171000" />
     </task>
     <servers />
   </component>
