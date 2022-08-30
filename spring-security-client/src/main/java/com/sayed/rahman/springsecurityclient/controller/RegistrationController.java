@@ -11,10 +11,10 @@ import com.sayed.rahman.springsecurityclient.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController()
@@ -53,22 +53,68 @@ public class RegistrationController {
     public String resendVerificationToken(@RequestParam("token") String oldToken, HttpServletRequest servletRequest) {
         VerificationToken token = userService.generateNewVerficationToken(oldToken);
         User user = token.getUser();
-        resendVerificationTokenViaMail(user, applicationUrl(servletRequest), token);
+        String url = resendVerificationTokenViaMail(user, applicationUrl(servletRequest), token);
         return "See in the logs ";
     }
 
+
+    /**
+     * Here , to reset a passwowrd , Email of the user is mandatory
+     *
+     * @param passwordModel
+     * @param request
+     * @return
+     */
     @PostMapping("/resetPassword")
-    public String resetPassword(@RequestParam PasswordModel passwordModel , HttpServletRequest request) {
+    public String resetPassword(@RequestParam PasswordModel passwordModel, HttpServletRequest request) {
         User user = userService.getUserByEmail(passwordModel.getEmail());
         String url = "";
-        if (user != null ){
+        if (user != null) {
             //user is present by the email
             String token = UUID.randomUUID().toString();
-            userService.createPasswordResetToken(user,token);
-            url = passwordResetTokenMail(user, applicationUrl(request) , token);
+            userService.savePasswordResetToken(user, token);
+            url = passwordResetTokenMail(user, applicationUrl(request), token);
         }
         return url;
     }
+
+    /**
+     * This method takes a token (Old one) , varifies it with time and then
+     * if varification of token is okay , we need to check new password with retyped
+     * password , if both of them matches , we encrypt the new password and then saves it in the
+     * password for that user
+     *
+     * @return
+     */
+    @PostMapping("/savePassword")
+    public String savePassword(@RequestParam("token") String token, @RequestBody PasswordModel passwordModel) {
+
+        String passwordTokenValidation = userService.validatePasswordToken(token);
+        if (!passwordTokenValidation.equalsIgnoreCase(UserServiceImpl.USER_VERIFIED)) {
+            return passwordTokenValidation;
+        }
+        Optional<User> user = userService.getUserByPasswordRestToken(token);
+        if (user.isPresent()) {
+            userService.changePassword(passwordModel.getPassword(), user);
+        }
+
+        return "Password saved";
+    }
+
+
+    @PostMapping("/changePassword")
+    public String changePassword(@RequestBody PasswordModel passwordModel) {
+        if (passwordModel.getEmail().isEmpty()) {
+            return  "Email is required ";
+        }
+        if (passwordModel.getPassword().equalsIgnoreCase(passwordModel.getNewPassword())){
+            return "Old and new Password is not identical ";
+        }
+        User user = this.userService.getUserByEmail(passwordModel.getEmail());
+       user = userService.changePassword(passwordModel.getPassword() , Optional.ofNullable(user));
+        return "Password Changed ";
+    }
+
 
     private String passwordResetTokenMail(User user, String applicationUrl, String token) {
         String url = applicationUrl
@@ -82,7 +128,7 @@ public class RegistrationController {
     }
 
 
-    private void resendVerificationTokenViaMail(User user, String applicationUrl, VerificationToken token) {
+    private String resendVerificationTokenViaMail(User user, String applicationUrl, VerificationToken token) {
         String link = applicationUrl
                 + "/api/verifyRegistration"
                 + "?"
@@ -91,6 +137,7 @@ public class RegistrationController {
 
         log.info("the resend verification mail is {}", link);
 
+        return link;
     }
 
     private String applicationUrl(HttpServletRequest servletRequest) {

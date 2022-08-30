@@ -1,8 +1,10 @@
 package com.sayed.rahman.springsecurityclient.service;
 
+import com.sayed.rahman.springsecurityclient.entity.PasswordResetToken;
 import com.sayed.rahman.springsecurityclient.entity.User;
 import com.sayed.rahman.springsecurityclient.entity.VerificationToken;
 import com.sayed.rahman.springsecurityclient.model.UserModel;
+import com.sayed.rahman.springsecurityclient.repository.PasswordResetTokenRepository;
 import com.sayed.rahman.springsecurityclient.repository.UserRepository;
 import com.sayed.rahman.springsecurityclient.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -20,6 +23,8 @@ public class UserServiceImpl implements UserService {
     public static final String USER_VERIFIED = "user_verified";
     @Autowired
     private VerificationTokenRepository tokenRepository;
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository ;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
@@ -81,7 +86,43 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void createPasswordResetToken(User user, String token) {
+    public void savePasswordResetToken(User user, String token) {
+        PasswordResetToken passwordResetToken = new PasswordResetToken(token, user);
+        this.passwordResetTokenRepository.save(passwordResetToken);
+    }
 
+    @Override
+    public String validatePasswordToken(String token) {
+        PasswordResetToken verificationToken =
+                this.passwordResetTokenRepository.findByToken(token);
+        if (verificationToken == null) {
+            return INVALID_TOKEN;
+        }
+        User user = verificationToken.getUser();
+        LocalDateTime timeNow = LocalDateTime.now();
+        if (verificationToken.getExpirationTime().isBefore(timeNow)) {
+            user.setEnabled(true);
+            passwordResetTokenRepository.delete(verificationToken);
+            userRepository.save(user);
+            return USER_VERIFIED;
+        }//else time has expired
+        return EXPIRED_TOKEN;
+    }
+
+    @Override
+    public Optional<User> getUserByPasswordRestToken(String token) {
+        return Optional.ofNullable(this.passwordResetTokenRepository
+                .findByToken(token)
+                .getUser());
+
+    }
+
+    @Override
+    public User changePassword(String password, Optional<User> user) {
+        User existingUser;
+        existingUser = user.get();
+        existingUser
+                .setPassword(this.passwordEncoder.encode(password));
+       return this.userRepository.save(existingUser);
     }
 }

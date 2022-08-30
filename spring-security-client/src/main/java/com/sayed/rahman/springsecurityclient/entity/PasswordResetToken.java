@@ -1,8 +1,14 @@
 package com.sayed.rahman.springsecurityclient.entity;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+@Entity
+@NoArgsConstructor
 public class PasswordResetToken {
     private static final Integer VERIFICATION_TIME = 10 ;
 
@@ -38,4 +44,11 @@ public class PasswordResetToken {
         return localDateTime ;
     }
 
+    public User getUser() {
+        return this.user;
+    }
+
+    public LocalDateTime getExpirationTime() {
+        return this.expirationTime;
+    }
 }

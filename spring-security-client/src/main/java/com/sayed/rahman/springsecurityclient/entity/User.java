@@ -7,9 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity(name = "User")
-@Table(name = "user", uniqueConstraints = {
-        @UniqueConstraint(columnNames = "email", name = "email_unique_constraints"),
-})
+@Table(name = "user")
 @Data
 @NoArgsConstructor
 public class User {
@@ -18,9 +16,8 @@ public class User {
     Long id;
     private String firstName;
     private String lastName;
-    @Column(name = "email", unique = true)
     private String email;
-    @Column(length = 60)
+    @Column(length = 60,unique = true)
     private String password;
     private String role;
     private boolean enabled = false;
